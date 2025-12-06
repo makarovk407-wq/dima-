@@ -1,0 +1,42 @@
+// 1. Определяем ключ, под которым будем хранить данные в браузере.
+const STORAGE_KEY = 'notepadContent';
+
+// 2. Получаем ссылку на текстовое поле из HTML с помощью его ID.
+const noteArea = document.getElementById('note-area');
+
+// 3. Функция для ЗАГРУЗКИ данных при открытии страницы
+function loadNote() {
+    // Получаем данные из локального хранилища браузера по ключу
+    const savedContent = localStorage.getItem(STORAGE_KEY);
+    
+    // Если что-то было сохранено, вставляем это в текстовое поле.
+    if (savedContent) {
+        noteArea.value = savedContent;
+    }
+}
+
+// 4. Функция для СОХРАНЕНИЯ данных
+function saveNote() {
+    // Получаем текущее содержимое текстового поля
+    const currentContent = noteArea.value;
+    
+    // Сохраняем содержимое в локальное хранилище браузера
+    // (Это происходит мгновенно и без участия сервера!)
+    localStorage.setItem(STORAGE_KEY, currentContent);
+    
+    console.log('Заметка автоматически сохранена.');
+}
+
+// --- Инициализация ---
+
+// 5. При загрузке страницы:
+//    Сразу же пытаемся загрузить сохраненный текст.
+loadNote();
+
+// 6. Добавляем "слушателя" событий:
+//    Каждый раз, когда пользователь что-то вводит (событие 'input'),
+//    вызывается функция saveNote. Это обеспечивает АВТОСОХРАНЕНИЕ.
+noteArea.addEventListener('input', saveNote);
+
+// 7. Дополнительно: Сохранение при закрытии страницы (на всякий случай)
+window.addEventListener('beforeunload', saveNote);
